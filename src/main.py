@@ -15,7 +15,7 @@ template_class_sheet = workbook['Client Class Upload']
 # Define App Frame
 root = customtkinter.CTk()
 root.geometry("720x520")
-root.title("mPact Pro Data Migration Assistant")
+root.title("Data Migration Assistant")
 
 # Tkinter setup
 # System Settings

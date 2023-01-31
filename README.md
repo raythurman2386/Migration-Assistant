@@ -2,6 +2,8 @@
 
 Migration Assistant is an application built to assist in cleaning excel files from agencies in preparation for data migration into our system.
 
+![Migration Assistant](images/Screenshot%202023-01-31%20153256.png)
+
 ## Getting Started
 
 Python 3 will be required to be installed on your system, and knowledge to preferable create a virtual environment.
