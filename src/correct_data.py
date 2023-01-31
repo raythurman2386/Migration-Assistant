@@ -68,13 +68,16 @@ def get_zipcode(city, state, client):
 
 # Correct Dates
 def correct_date(date):
-    if date is None:
-        return None
-    if isinstance(date, str):
-        date = datetime.datetime.strptime(date, '%m/%d/%Y').date()
-    if isinstance(date, datetime.datetime):
-        date = date.date()
-    return date.strftime('%m/%d/%Y')
+    try:
+        if date is None:
+            return None
+        if isinstance(date, str):
+            date = datetime.datetime.strptime(date, '%m/%d/%Y').date()
+        if isinstance(date, datetime.datetime):
+            date = date.date()
+        return date.strftime('%m/%d/%Y')
+    except (AttributeError, ValueError):
+        return date
 
 
 # correct Race

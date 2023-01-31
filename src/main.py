@@ -3,7 +3,7 @@ from utils import create_workbook
 from tkinter import filedialog
 from correct_data import *
 from pathlib import Path
-from variables import *
+from variables import CASE_VARS, CLASS_VARS, MAHA_VARS, ABCDC_VARS
 import tkinter as tk
 import customtkinter
 
@@ -21,6 +21,7 @@ root.title("Data Migration Assistant")
 # System Settings
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
+AGENCY = 'TEMPLATE'
 HAS_CLIENTS = tk.StringVar(value=str(True))
 HAS_CLASSES = tk.StringVar(value=str(False))
 FIX_ADDRESS = tk.StringVar(value=str(False))
@@ -169,41 +170,41 @@ def process_clients(client_data):
         template_client_sheet.append(list(client.values()))
 
 
-def process_classes(class_data):
+def process_classes(class_data, vars=CLASS_VARS):
     class_id = 1
     classes = {}
     # Start creating initial hash table of classes
-    for row in class_data.active.iter_rows(min_row=CLASS_VARS["STARTINGROW"], values_only=True, min_col=CLASS_VARS["STARTINGCOL"]):
-        client_id = row[CLASS_VARS["CLIENTID"]]
+    for row in class_data.active.iter_rows(min_row=vars["STARTINGROW"], values_only=True, min_col=vars["STARTINGCOL"]):
+        client_id = row[vars["CLIENTID"]]
         # classDateFix = correct_date(row[17])
         client = {
             'ID': class_id,
             'clientId': correct_legacy_id(client_id),
-            'FirstName': row[CLASS_VARS["FIRSTNAME"]],
-            'LastName': row[CLASS_VARS["LASTNAME"]],
-            'Phone': clean_phone(row[CLASS_VARS["PHONE"]]),
-            'AddressNumber': row[CLASS_VARS["ADDRESSNUMBER"]],
-            'StreetName': row[CLASS_VARS["STREETNAME"]],
-            'ClientCity': row[CLASS_VARS["CITY"]],
-            'ClientState': row[CLASS_VARS["STATE"]],
-            'ClientCounty': row[CLASS_VARS["COUNTY"]],
-            'Zip': row[CLASS_VARS["ZIP"]],
-            'Race': correct_race(row[CLASS_VARS["RACE"]]),
-            'Ethnicity': correct_ethnicity(row[CLASS_VARS["ETHNICITY"]]),
-            'EnglishProficiencyLevel': correct_eng_prof(row[CLASS_VARS["ENGLISHPROF"]]),
-            'HouseholdIncome': row[CLASS_VARS["HOUSEHOLDINCOME"]],
-            'HouseholdSize': row[CLASS_VARS["HOUSEHOLDSIZE"]],
-            'ApartmentNumber': row[CLASS_VARS["APTNUMBER"]],
-            'Email': row[CLASS_VARS["EMAIL"]],
-            'InitialCaseType': correct_case_type(row[CLASS_VARS["INITIALCASETYPE"]]),
-            'DateOfBirth': correct_date(row[CLASS_VARS["DATEOFBIRTH"]]),
-            'CounselorName': row[CLASS_VARS["COUNSELOR"]],
-            'IntakeDate': correct_date(row[CLASS_VARS["INTAKEDATE"]]),
-            'CourseID': row[CLASS_VARS["COURSEID"]],
-            'ClassDate': row[CLASS_VARS["CLASSDATE"]],
-            'AttendanceStatus': correct_attendance(row[CLASS_VARS["ATTENDANCESTATUS"]]),
-            'RuralAreaStatus': correct_rural(row[CLASS_VARS["RURALSTATUS"]]),
-            'HouseholdType': correct_household(row[CLASS_VARS["HOUSEHOLDTYPE"]])
+            'FirstName': row[vars["FIRSTNAME"]],
+            'LastName': row[vars["LASTNAME"]],
+            'Phone': clean_phone(row[vars["PHONE"]]),
+            'AddressNumber': row[vars["ADDRESSNUMBER"]],
+            'StreetName': row[vars["STREETNAME"]],
+            'ClientCity': row[vars["CITY"]],
+            'ClientState': row[vars["STATE"]],
+            'ClientCounty': row[vars["COUNTY"]],
+            'Zip': row[vars["ZIP"]],
+            'Race': correct_race(row[vars["RACE"]]),
+            'Ethnicity': correct_ethnicity(row[vars["ETHNICITY"]]),
+            'EnglishProficiencyLevel': correct_eng_prof(row[vars["ENGLISHPROF"]]),
+            'HouseholdIncome': row[vars["HOUSEHOLDINCOME"]],
+            'HouseholdSize': row[vars["HOUSEHOLDSIZE"]],
+            'ApartmentNumber': row[vars["APTNUMBER"]],
+            'Email': row[vars["EMAIL"]],
+            'InitialCaseType': correct_case_type(row[vars["INITIALCASETYPE"]]),
+            'DateOfBirth': correct_date(row[vars["DATEOFBIRTH"]]),
+            'CounselorName': row[vars["COUNSELOR"]],
+            'IntakeDate': correct_date(row[vars["INTAKEDATE"]]),
+            'CourseID': row[vars["COURSEID"]],
+            'ClassDate': row[vars["CLASSDATE"]],
+            'AttendanceStatus': correct_attendance(row[vars["ATTENDANCESTATUS"]]),
+            'RuralAreaStatus': correct_rural(row[vars["RURALSTATUS"]]),
+            'HouseholdType': correct_household(row[vars["HOUSEHOLDTYPE"]])
         }
 
         if eval(FIX_ADDRESS.get()):
@@ -227,7 +228,12 @@ def browse_file():
         process_clients(agency_data)
 
     if eval(HAS_CLASSES.get()):
-        process_classes(agency_data)
+        if AGENCY == 'TEMPLATE':
+            process_classes(agency_data)
+        if AGENCY == 'MAHA':
+            process_classes(agency_data, vars=MAHA_VARS)
+        if AGENCY == 'ABCDC':
+            process_classes(agency_data, vars=ABCDC_VARS)
 
     download_button = customtkinter.CTkButton(download_frame, text="Download Spreadsheet", command=save_workbook)
     download_button.pack(padx=10, pady=10)
@@ -248,4 +254,5 @@ download_frame = customtkinter.CTkFrame(master=root, width=680, height=200, corn
 download_frame.pack(padx=20, pady=20)
 
 # Activate mainloop for tkinter application
-root.mainloop()
+if __name__ == '__main__':
+    root.mainloop()
