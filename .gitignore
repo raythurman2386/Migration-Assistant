@@ -1,0 +1,11 @@
+.venv
+/*.xlsx
+/*.csv
+/**/*.xlsx
+/**/*.csv
+__pycache__
+/MAHA/
+/venv/
+/**/*.zip
+agency
+completed
