@@ -15,7 +15,7 @@ def correct_name(name):
 
 #  Clean and Correct Phone
 def clean_phone(phone):
-    phone_str = str(phone).replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+    phone_str = str(phone).replace(' ', '').replace('-', '').replace('(', '').replace(')', '').replace(',', '')
     return phone_str[-10:] if len(phone_str) >= 10 else None
 
 

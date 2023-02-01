@@ -49,8 +49,8 @@ agency_menu.set(AGENCY.get())
 
 # checkbox frame to control app variables
 def set_checkbox():
-    print(f"System Variables: Clients: {HAS_CLIENTS.get()}, Classes: {HAS_CLASSES.get()}, Address: {FIX_ADDRESS.get()}, Zipcode: {FIX_ZIPCODE.get()}")
-
+    # print(f"System Variables: Clients: {HAS_CLIENTS.get()}, Classes: {HAS_CLASSES.get()}, Address: {FIX_ADDRESS.get()}, Zipcode: {FIX_ZIPCODE.get()}")
+    pass
 
 checkbox_frame = customtkinter.CTkFrame(master=root, width=680, height=200, corner_radius=10)
 checkbox_frame.pack(padx=20, pady=20)
@@ -217,7 +217,6 @@ def process_classes(class_data, vars):
 def browse_file():
     agency_filename = filedialog.askopenfilename()
     agency_data = load_workbook(filename=agency_filename, data_only=True)
-    print(AGENCY.get())
     if eval(HAS_CLIENTS.get()):
         process_clients(agency_data)
 
