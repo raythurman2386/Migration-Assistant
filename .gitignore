@@ -9,3 +9,6 @@ __pycache__
 /**/*.zip
 agency
 completed
+build
+dist
+*.spec
