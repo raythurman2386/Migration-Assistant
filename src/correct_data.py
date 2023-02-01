@@ -76,7 +76,7 @@ def correct_date(date):
         if isinstance(date, datetime.datetime):
             date = date.date()
         return date.strftime('%m/%d/%Y')
-    except (AttributeError, ValueError):
+    except (AttributeError, ValueError, TypeError):
         return date
 
 

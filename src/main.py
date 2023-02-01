@@ -21,7 +21,7 @@ root.title("Data Migration Assistant")
 # System Settings
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
-AGENCY = 'TEMPLATE'
+AGENCY = tk.StringVar(value='TEMPLATE')
 HAS_CLIENTS = tk.StringVar(value=str(True))
 HAS_CLASSES = tk.StringVar(value=str(False))
 FIX_ADDRESS = tk.StringVar(value=str(False))
@@ -36,8 +36,8 @@ agency_frame = customtkinter.CTkFrame(master=root, width=680, height=200, corner
 agency_frame.pack(padx=20, pady=20)
 
 def agency_menu_callback(choice):
-    AGENCY = choice
-    print(f"Agency Menu clicked: {choice}, new agency: {AGENCY}")
+    AGENCY.set(choice)
+    # print(f"Agency Menu clicked: {choice}, new agency: {AGENCY.get()}")
 
 
 agency_menu_label = customtkinter.CTkLabel(agency_frame, text="Please select if uploading a special agency.")
@@ -45,7 +45,7 @@ agency_menu_label.pack(padx=10, pady=10, side=tk.LEFT)
 
 agency_menu = customtkinter.CTkOptionMenu(master=agency_frame,values=['TEMPLATE', 'MAHA', 'FEA', 'ABCDC'], command=agency_menu_callback)
 agency_menu.pack(padx=10, pady=10, side=tk.RIGHT)
-agency_menu.set("TEMPLATE")
+agency_menu.set(AGENCY.get())
 
 
 # checkbox frame to control app variables
@@ -78,7 +78,7 @@ def save_workbook():
     # Download to the downloads folder
     download_path = str(Path.home() / "Downloads")
     # Save the worksheet when all is complete
-    outputFileName = f'{download_path}\\final_{AGENCY}.xlsx'
+    outputFileName = f'{download_path}\\final_{AGENCY.get()}.xlsx'
     workbook.save(filename=outputFileName)
     downloaded_label = customtkinter.CTkLabel(download_frame, text="""Your file will be available in your downloads folder. Inspect your data
 for any potential errors or data updates that need added to the script.
@@ -170,7 +170,7 @@ def process_clients(client_data):
         template_client_sheet.append(list(client.values()))
 
 
-def process_classes(class_data, vars=CLASS_VARS):
+def process_classes(class_data, vars):
     class_id = 1
     classes = {}
     # Start creating initial hash table of classes
@@ -224,16 +224,17 @@ def process_classes(class_data, vars=CLASS_VARS):
 def browse_file():
     agency_filename = filedialog.askopenfilename()
     agency_data = load_workbook(filename=agency_filename, data_only=True)
+    print(AGENCY.get())
     if eval(HAS_CLIENTS.get()):
         process_clients(agency_data)
 
     if eval(HAS_CLASSES.get()):
-        if AGENCY == 'TEMPLATE':
-            process_classes(agency_data)
-        if AGENCY == 'MAHA':
+        if AGENCY.get() == 'MAHA':
             process_classes(agency_data, vars=MAHA_VARS)
-        if AGENCY == 'ABCDC':
+        if AGENCY.get() == 'ABCDC':
             process_classes(agency_data, vars=ABCDC_VARS)
+
+        process_classes(agency_data, vars=CLASS_VARS)
 
     download_button = customtkinter.CTkButton(download_frame, text="Download Spreadsheet", command=save_workbook)
     download_button.pack(padx=10, pady=10)
