@@ -1,6 +1,6 @@
 # Migration Assistant
 
-![Migration Assistant](images/migrationassistant.png)
+![Migration Assistant](images/screenshot1.png)
 
 This application is designed to clean and normalize data in an Excel file to match a specific template. The user can upload an Excel file, the application will then clean and normalize the data, and finally the user can download the cleaned and normalized data in the specified template format. Designed as tooling to assist with agency data migrations from one cms to another.
 

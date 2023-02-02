@@ -40,17 +40,17 @@ class TestDataFuctions(unittest.TestCase):
 
     def test_correct_case_type(self):
         expected = correct_case_type('Home Purchase')
-        self.assertTrue('expected', options['caseType']['a'])
+        self.assertTrue(expected, options['caseType']['a'])
 
 
     def test_correct_rural(self):
         expected = correct_rural('Household lives in a rural area')
-        self.assertTrue('expected', options['RuralAreaStatus']['a'])
+        self.assertTrue(expected, options['RuralAreaStatus']['a'])
 
 
     def test_correct_household(self):
         expected = correct_household('Female-Single Parent')
-        self.assertTrue('expected', options['HouseholdType']['b'])
+        self.assertTrue(expected, options['HouseholdType']['b'])
 
 if __name__ == 'main':
     unittest.main()
