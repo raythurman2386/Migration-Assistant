@@ -144,10 +144,12 @@ def correct_eng_prof(engProf):
     eng_prof_mapping = {
         'a. Household is Limited English Proficient': options['englishProficiency']['a'],
         'Household is Limited English Proficient': options['englishProficiency']['a'],
+        'Limited English Proficient': options['englishProficiency']['a'],
         'Is not English proficient': options['englishProficiency']['a'],
         'b. Household is not Limited English Proficient': options['englishProficiency']['b'],
         'b . Household is not Limited English Proficient': options['englishProficiency']['b'],
         'Household is not Limited English Proficient': options['englishProficiency']['b'],
+        'Not Limited English Proficient': options['englishProficiency']['b'],
         'Is English proficient': options['englishProficiency']['b'],
         'Chose not to respond': options['englishProficiency']['c'],
     }
@@ -189,9 +191,13 @@ def correct_rural(ruralStatus):
 # Correct household type
 def correct_household(house):
     household_mapping = {
+        'Single Adult': options['HouseholdType']['a'],
         'Female-Single Parent': options['HouseholdType']['b'],
+        'Female headed single parent household': options['HouseholdType']['b'],
+        'Male headed single parent household': options['HouseholdType']['c'],
         'Married without Children': options['HouseholdType']['d'],
-        'Married with Children': options['HouseholdType']['e']
+        'Married with Children': options['HouseholdType']['e'],
+        'Two or more unrelated adults': options['HouseholdType']['f'],
     }
     return household_mapping.get(house, options['HouseholdType']['g'])
 
