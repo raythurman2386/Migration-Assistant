@@ -7,25 +7,28 @@ from variables import CASE_VARS, CLASS_VARS, MAHA_VARS, ABCDC_VARS
 import tkinter as tk
 import customtkinter
 
-# Create Initial workbook to save all data to
-workbook = create_workbook()
-template_client_sheet = workbook['Client Case Session Upload']
-template_class_sheet = workbook['Client Class Upload']
+# Tkinter setup
+# System Settings
+customtkinter.set_appearance_mode("System")
+customtkinter.set_default_color_theme("green")
 
 # Define App Frame
 root = customtkinter.CTk()
 root.geometry("720x580")
 root.title("Data Migration Assistant")
 
-# Tkinter setup
-# System Settings
-customtkinter.set_appearance_mode("System")
-customtkinter.set_default_color_theme("green")
+# Create Initial workbook to save all data to
+workbook = create_workbook()
+template_client_sheet = workbook['Client Case Session Upload']
+template_class_sheet = workbook['Client Class Upload']
 AGENCY = tk.StringVar(value='TEMPLATE')
-HAS_CLIENTS = tk.StringVar(value=str(True))
+HAS_CLIENTS = tk.StringVar(value=str(False))
 HAS_CLASSES = tk.StringVar(value=str(False))
 FIX_ADDRESS = tk.StringVar(value=str(False))
 FIX_ZIPCODE = tk.StringVar(value=str(False))
+SAVE_FILE_AS = tk.StringVar(value="Save As . . .")
+agency_filename = ""
+agency_data = ""
 
 # UI Elements
 title = customtkinter.CTkLabel(root, text="Migration Assitant", font=('Arial', 16))
@@ -71,28 +74,39 @@ zip_checkbox = customtkinter.CTkCheckBox(master=checkbox_frame, text="Fix Zipcod
 zip_checkbox.pack(padx=10, pady=10, side=tk.RIGHT)
 
 
+def reset_assistant():
+    # Create Initial workbook to save all data to
+    workbook = create_workbook()
+    template_client_sheet = workbook['Client Case Session Upload']
+    template_class_sheet = workbook['Client Class Upload']
+    AGENCY.set('TEMPLATE')
+    HAS_CLIENTS.set(str(False))
+    HAS_CLASSES.set(str(False))
+    FIX_ADDRESS.set(str(False))
+    FIX_ZIPCODE.set(str(False))
+    SAVE_FILE_AS.set("")
+    # instantiate variables
+    agency_filename = ""
+    agency_data = ""
+
+
 # Save final outcome of data manipulation in Downloads Folder
 def save_workbook():
     # Download to the downloads folder
     download_path = str(Path.home() / "Downloads")
     # Save the worksheet when all is complete
-    outputFileName = f'{download_path}\\final_{AGENCY.get()}.xlsx'
+    outputFileName = f'{download_path}\\final_{SAVE_FILE_AS.get()}{AGENCY.get()}.xlsx'
     workbook.save(filename=outputFileName)
-    downloaded_label = customtkinter.CTkLabel(download_frame, text="""Your file will be available in your downloads folder. Inspect your data
-for any potential errors or data updates that need added to the script.
-                                                                    """, font=('Arial', 14))
-    downloaded_label.pack(padx=10, pady=10)
+    reset_assistant()    
 
 
 def process_clients(client_data):
-    # Index for each client row, required for mPact Pro uploader
-    id = 1
-    # Clients hashtable to keep track of all data on spreadsheet
     clients = {}
+    clients_idx = 1
     for row in client_data.active.iter_rows(min_row=CASE_VARS["STARTINGROW"], values_only=True, min_col=CASE_VARS["STARTINGCOL"]):
         client_id = row[CASE_VARS["CLIENTID"]]
         client = {
-            'ID': id,
+            'ID': clients_idx,
             'clientId': correct_legacy_id(client_id),
             'FirstName': row[CASE_VARS["FIRSTNAME"]],
             'LastName': row[CASE_VARS["LASTNAME"]],
@@ -153,8 +167,8 @@ def process_clients(client_data):
             get_zipcode(row[CASE_VARS["CITY"]], row[CASE_VARS["STATE"]], client)
 
         # Save the client by the ID for easy Access
-        clients[id] = client
-        id += 1
+        clients[clients_idx] = client
+        clients_idx += 1
 
     # THIS IS DONE LAST FOR THE CLIENT SHEET
     # GRAB ALL DATA BEFORE THIS UNLESS TESTING
@@ -164,14 +178,14 @@ def process_clients(client_data):
 
 
 def process_classes(class_data, vars):
-    class_id = 1
-    classes = {}
     # Start creating initial hash table of classes
+    classes = {}
+    classes_idx = 1
     for row in class_data.active.iter_rows(min_row=vars["STARTINGROW"], values_only=True, min_col=vars["STARTINGCOL"]):
         client_id = row[vars["CLIENTID"]]
         # classDateFix = correct_date(row[17])
         client = {
-            'ID': class_id,
+            'ID': classes_idx,
             'clientId': correct_legacy_id(client_id),
             'FirstName': row[vars["FIRSTNAME"]],
             'LastName': row[vars["LASTNAME"]],
@@ -207,8 +221,8 @@ def process_classes(class_data, vars):
             get_zipcode(row[CLASS_VARS["CITY"]], row[CLASS_VARS["STATE"]], client)
 
         # Save the client by the ID for easy Access
-        class_id += 1
-        classes[client_id] = client
+        classes[classes_idx] = client
+        classes_idx += 1
 
     for client in classes.values():
         template_class_sheet.append(list(client.values()))
@@ -228,9 +242,6 @@ def browse_file():
 
         process_classes(agency_data, vars=CLASS_VARS)
 
-    download_button = customtkinter.CTkButton(download_frame, text="Download Spreadsheet", command=save_workbook)
-    download_button.pack(padx=10, pady=10)
-
 
 # Open Container
 open_frame = customtkinter.CTkFrame(master=root, width=680, height=200, corner_radius=10)
@@ -245,6 +256,17 @@ open_button.pack(padx=10, pady=10, side=tk.RIGHT)
 # Download Container
 download_frame = customtkinter.CTkFrame(master=root, width=680, height=200, corner_radius=10)
 download_frame.pack(padx=20, pady=20)
+# create main entry and button
+
+entry = customtkinter.CTkEntry(download_frame, placeholder_text="Save File As...", textvariable=SAVE_FILE_AS)
+entry.pack(padx=20, pady=20)
+
+download_button = customtkinter.CTkButton(download_frame, text="Download Spreadsheet", command=save_workbook)
+download_button.pack(padx=10, pady=10)
+downloaded_label = customtkinter.CTkLabel(download_frame, text="""Your file will be available in your downloads folder. Inspect your data
+for any potential errors or data updates that need added to the script.
+                                                                    """, font=('Arial', 14))
+downloaded_label.pack(padx=10, pady=10)
 
 # Activate mainloop for tkinter application
 if __name__ == '__main__':
