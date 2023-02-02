@@ -101,131 +101,137 @@ def save_workbook():
 
 
 def process_clients(client_data):
-    clients = {}
-    clients_idx = 1
-    for row in client_data.active.iter_rows(min_row=CASE_VARS["STARTINGROW"], values_only=True, min_col=CASE_VARS["STARTINGCOL"]):
-        client_id = row[CASE_VARS["CLIENTID"]]
-        client = {
-            'ID': clients_idx,
-            'clientId': correct_legacy_id(client_id),
-            'FirstName': row[CASE_VARS["FIRSTNAME"]],
-            'LastName': row[CASE_VARS["LASTNAME"]],
-            'Phone': clean_phone(row[CASE_VARS["PHONE"]]),
-            'AddressNumber': row[CASE_VARS["ADDRESSNUMBER"]],
-            'StreetName': row[CASE_VARS["STREETNAME"]],
-            'ClientCity': row[CASE_VARS["CITY"]],
-            'ClientState': row[CASE_VARS["STATE"]],
-            'ClientCounty': row[CASE_VARS["COUNTY"]],
-            'Zip': row[CASE_VARS["ZIP"]],
-            'Race': correct_race(row[CASE_VARS["RACE"]]),
-            'Ethnicity': correct_ethnicity(row[CASE_VARS["ETHNICITY"]]),
-            'EnglishProficiencyLevel': correct_eng_prof(row[CASE_VARS["ENGLISHPROF"]]),
-            'HouseholdIncome': row[CASE_VARS["HOUSEHOLDINCOME"]],
-            'HouseholdSize': row[CASE_VARS["HOUSEHOLDSIZE"]],
-            'ApartmentNumber': row[CASE_VARS["APTNUMBER"]],
-            'Email': row[CASE_VARS["EMAIL"]],
-            'InitialCaseType': correct_case_type(row[CASE_VARS["INITIALCASETYPE"]]),
-            'DateOfBirth': correct_date(row[CASE_VARS["DATEOFBIRTH"]]),
-            'CounselorName': row[CASE_VARS["COUNSELOR"]],
-            'IntakeDate': correct_date(row[CASE_VARS["INTAKEDATE"]]),
-            'CaseType': correct_case_type(row[CASE_VARS["CASETYPE"]]),
-            'CaseStartDate': correct_date(row[CASE_VARS["CASESTARTDATE"]]),
-            'CaseID': correct_case_id(row[CASE_VARS["CASEID"]]),
-            'SessionID': row[CASE_VARS["SESSIONID"]],
-            'Date': row[CASE_VARS["DATE"]],
-            'NOFAGrant': correct_nofa(row[CASE_VARS["NOFAGRANT"]]),
-            '9a': None,
-            '9b': None,
-            '9c': None,
-            '9d': None,
-            '9e': None,
-            '9f': None,
-            '10a': None,
-            '10b': None,
-            '10c': None,
-            '10d': None,
-            '10e': None,
-            '10f': None,
-            '10g': None,
-            '10h': None,
-            '10i': None,
-            '10j': None,
-            '10k': None,
-            '10l': None,
-            '10m': None,
-            '10n': None,
-            'SessionNotes': row[CASE_VARS["NOTES"]],
-            'ruralareastatus': correct_rural(row[CASE_VARS["RURALSTATUS"]]),
-            'HouseholdType': correct_household(row[CASE_VARS["HOUSEHOLDTYPE"]])
-        }
+    try:
+        clients = {}
+        clients_idx = 1
+        for row in client_data.active.iter_rows(min_row=CASE_VARS["STARTINGROW"], values_only=True, min_col=CASE_VARS["STARTINGCOL"]):
+            client_id = row[CASE_VARS["CLIENTID"]]
+            client = {
+                'ID': clients_idx,
+                'clientId': correct_legacy_id(client_id),
+                'FirstName': row[CASE_VARS["FIRSTNAME"]],
+                'LastName': row[CASE_VARS["LASTNAME"]],
+                'Phone': clean_phone(row[CASE_VARS["PHONE"]]),
+                'AddressNumber': row[CASE_VARS["ADDRESSNUMBER"]],
+                'StreetName': row[CASE_VARS["STREETNAME"]],
+                'ClientCity': row[CASE_VARS["CITY"]],
+                'ClientState': row[CASE_VARS["STATE"]],
+                'ClientCounty': row[CASE_VARS["COUNTY"]],
+                'Zip': row[CASE_VARS["ZIP"]],
+                'Race': correct_race(row[CASE_VARS["RACE"]]),
+                'Ethnicity': correct_ethnicity(row[CASE_VARS["ETHNICITY"]]),
+                'EnglishProficiencyLevel': correct_eng_prof(row[CASE_VARS["ENGLISHPROF"]]),
+                'HouseholdIncome': row[CASE_VARS["HOUSEHOLDINCOME"]],
+                'HouseholdSize': row[CASE_VARS["HOUSEHOLDSIZE"]],
+                'ApartmentNumber': row[CASE_VARS["APTNUMBER"]],
+                'Email': row[CASE_VARS["EMAIL"]],
+                'InitialCaseType': correct_case_type(row[CASE_VARS["INITIALCASETYPE"]]),
+                'DateOfBirth': correct_date(row[CASE_VARS["DATEOFBIRTH"]]),
+                'CounselorName': row[CASE_VARS["COUNSELOR"]],
+                'IntakeDate': correct_date(row[CASE_VARS["INTAKEDATE"]]),
+                'CaseType': correct_case_type(row[CASE_VARS["CASETYPE"]]),
+                'CaseStartDate': correct_date(row[CASE_VARS["CASESTARTDATE"]]),
+                'CaseID': correct_case_id(row[CASE_VARS["CASEID"]]),
+                'SessionID': row[CASE_VARS["SESSIONID"]],
+                'Date': row[CASE_VARS["DATE"]],
+                'NOFAGrant': correct_nofa(row[CASE_VARS["NOFAGRANT"]]),
+                '9a': None,
+                '9b': None,
+                '9c': None,
+                '9d': None,
+                '9e': None,
+                '9f': None,
+                '10a': None,
+                '10b': None,
+                '10c': None,
+                '10d': None,
+                '10e': None,
+                '10f': None,
+                '10g': None,
+                '10h': None,
+                '10i': None,
+                '10j': None,
+                '10k': None,
+                '10l': None,
+                '10m': None,
+                '10n': None,
+                'SessionNotes': row[CASE_VARS["NOTES"]],
+                'ruralareastatus': correct_rural(row[CASE_VARS["RURALSTATUS"]]),
+                'HouseholdType': correct_household(row[CASE_VARS["HOUSEHOLDTYPE"]])
+            }
 
-        # Split the address
-        if eval(FIX_ADDRESS.get()):
-            split_address(row[CASE_VARS["STREETNAME"]], client)
+            # Split the address
+            if eval(FIX_ADDRESS.get()):
+                split_address(row[CASE_VARS["STREETNAME"]], client)
 
-        if eval(FIX_ZIPCODE.get()):
-            get_zipcode(row[CASE_VARS["CITY"]], row[CASE_VARS["STATE"]], client)
+            if eval(FIX_ZIPCODE.get()):
+                get_zipcode(row[CASE_VARS["CITY"]], row[CASE_VARS["STATE"]], client)
 
-        # Save the client by the ID for easy Access
-        clients[clients_idx] = client
-        clients_idx += 1
+            # Save the client by the ID for easy Access
+            clients[clients_idx] = client
+            clients_idx += 1
 
-    # THIS IS DONE LAST FOR THE CLIENT SHEET
-    # GRAB ALL DATA BEFORE THIS UNLESS TESTING
-    # Add each client to the new spreadsheet
-    for client in clients.values():
-        template_client_sheet.append(list(client.values()))
+        # THIS IS DONE LAST FOR THE CLIENT SHEET
+        # GRAB ALL DATA BEFORE THIS UNLESS TESTING
+        # Add each client to the new spreadsheet
+        for client in clients.values():
+            template_client_sheet.append(list(client.values()))
+    except (AttributeError, IndexError):
+        reset_assistant()
 
 
 def process_classes(class_data, vars):
-    # Start creating initial hash table of classes
-    classes = {}
-    classes_idx = 1
-    for row in class_data.active.iter_rows(min_row=vars["STARTINGROW"], values_only=True, min_col=vars["STARTINGCOL"]):
-        client_id = row[vars["CLIENTID"]]
-        # classDateFix = correct_date(row[17])
-        client = {
-            'ID': classes_idx,
-            'clientId': correct_legacy_id(client_id),
-            'FirstName': row[vars["FIRSTNAME"]],
-            'LastName': row[vars["LASTNAME"]],
-            'Phone': clean_phone(row[vars["PHONE"]]),
-            'AddressNumber': row[vars["ADDRESSNUMBER"]],
-            'StreetName': row[vars["STREETNAME"]],
-            'ClientCity': row[vars["CITY"]],
-            'ClientState': row[vars["STATE"]],
-            'ClientCounty': row[vars["COUNTY"]],
-            'Zip': row[vars["ZIP"]],
-            'Race': correct_race(row[vars["RACE"]]),
-            'Ethnicity': correct_ethnicity(row[vars["ETHNICITY"]]),
-            'EnglishProficiencyLevel': correct_eng_prof(row[vars["ENGLISHPROF"]]),
-            'HouseholdIncome': row[vars["HOUSEHOLDINCOME"]],
-            'HouseholdSize': row[vars["HOUSEHOLDSIZE"]],
-            'ApartmentNumber': row[vars["APTNUMBER"]],
-            'Email': row[vars["EMAIL"]],
-            'InitialCaseType': correct_case_type(row[vars["INITIALCASETYPE"]]),
-            'DateOfBirth': correct_date(row[vars["DATEOFBIRTH"]]),
-            'CounselorName': row[vars["COUNSELOR"]],
-            'IntakeDate': correct_date(row[vars["INTAKEDATE"]]),
-            'CourseID': row[vars["COURSEID"]],
-            'ClassDate': row[vars["CLASSDATE"]],
-            'AttendanceStatus': correct_attendance(row[vars["ATTENDANCESTATUS"]]),
-            'RuralAreaStatus': correct_rural(row[vars["RURALSTATUS"]]),
-            'HouseholdType': correct_household(row[vars["HOUSEHOLDTYPE"]])
-        }
+    try:
+        # Start creating initial hash table of classes
+        classes = {}
+        classes_idx = 1
+        for row in class_data.active.iter_rows(min_row=vars["STARTINGROW"], values_only=True, min_col=vars["STARTINGCOL"]):
+            client_id = row[vars["CLIENTID"]]
+            # classDateFix = correct_date(row[17])
+            client = {
+                'ID': classes_idx,
+                'clientId': correct_legacy_id(client_id),
+                'FirstName': row[vars["FIRSTNAME"]],
+                'LastName': row[vars["LASTNAME"]],
+                'Phone': clean_phone(row[vars["PHONE"]]),
+                'AddressNumber': row[vars["ADDRESSNUMBER"]],
+                'StreetName': row[vars["STREETNAME"]],
+                'ClientCity': row[vars["CITY"]],
+                'ClientState': row[vars["STATE"]],
+                'ClientCounty': row[vars["COUNTY"]],
+                'Zip': row[vars["ZIP"]],
+                'Race': correct_race(row[vars["RACE"]]),
+                'Ethnicity': correct_ethnicity(row[vars["ETHNICITY"]]),
+                'EnglishProficiencyLevel': correct_eng_prof(row[vars["ENGLISHPROF"]]),
+                'HouseholdIncome': row[vars["HOUSEHOLDINCOME"]],
+                'HouseholdSize': row[vars["HOUSEHOLDSIZE"]],
+                'ApartmentNumber': row[vars["APTNUMBER"]],
+                'Email': row[vars["EMAIL"]],
+                'InitialCaseType': correct_case_type(row[vars["INITIALCASETYPE"]]),
+                'DateOfBirth': correct_date(row[vars["DATEOFBIRTH"]]),
+                'CounselorName': row[vars["COUNSELOR"]],
+                'IntakeDate': correct_date(row[vars["INTAKEDATE"]]),
+                'CourseID': row[vars["COURSEID"]],
+                'ClassDate': row[vars["CLASSDATE"]],
+                'AttendanceStatus': correct_attendance(row[vars["ATTENDANCESTATUS"]]),
+                'RuralAreaStatus': correct_rural(row[vars["RURALSTATUS"]]),
+                'HouseholdType': correct_household(row[vars["HOUSEHOLDTYPE"]])
+            }
 
-        if eval(FIX_ADDRESS.get()):
-            split_address(row[CLASS_VARS["STREETNAME"]], client)
+            if eval(FIX_ADDRESS.get()):
+                split_address(row[CLASS_VARS["STREETNAME"]], client)
 
-        if eval(FIX_ZIPCODE.get()):
-            get_zipcode(row[CLASS_VARS["CITY"]], row[CLASS_VARS["STATE"]], client)
+            if eval(FIX_ZIPCODE.get()):
+                get_zipcode(row[CLASS_VARS["CITY"]], row[CLASS_VARS["STATE"]], client)
 
-        # Save the client by the ID for easy Access
-        classes[classes_idx] = client
-        classes_idx += 1
+            # Save the client by the ID for easy Access
+            classes[classes_idx] = client
+            classes_idx += 1
 
-    for client in classes.values():
-        template_class_sheet.append(list(client.values()))
+        for client in classes.values():
+            template_class_sheet.append(list(client.values()))
+    except (AttributeError, IndexError):
+        reset_assistant()
 
 
 def browse_file():
