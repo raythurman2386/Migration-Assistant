@@ -205,11 +205,11 @@ def correct_household(house):
 # correct class attendance type
 def correct_attendance(attendance):
     attendance_mapping = {
-        'Graduated': 'Attended',
-        'No Show': 'No Show',
-        'Enrolled': 'Enrolled',
+        'Graduated': options['Attended']['a'],
+        'No Show': options['Attended']['b'],
+        'Enrolled': options['Attended']['c'],
     }
-    return attendance_mapping.get(attendance, 'Attended')
+    return attendance_mapping.get(attendance, options['Attended']['a'])
 
 
 # Correct NOFA
