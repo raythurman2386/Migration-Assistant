@@ -52,3 +52,7 @@ $ python src/main.py
 This application is designed to make the process of cleaning and normalizing Excel data easy and efficient. With its user-friendly interface and powerful data processing capabilities, it is a valuable tool for anyone working with large data sets in Excel format.
 
 This will open the custom tkinter window of the application. This is very specific to our template, if you would like a demo please reach out.
+
+### Script to Package into .exe
+
+`pyinstaller --add-data "C:/users/raymo/documents/dev/migration-assitant/venv/lib/site-packages/customtkinter;customtkinter/" --noconfirm --noconsole  src/main.py`

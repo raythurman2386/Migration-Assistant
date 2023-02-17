@@ -12,3 +12,5 @@ completed
 build
 dist
 *.spec
+.vscode
+.idea
